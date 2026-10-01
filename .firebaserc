@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "careercue-84f65"
+  },
+  "targets": {
+    "careercue-84f65": {
+      "hosting": {
+        "certiva-careercue": [
+          "certiva-careercue"
+        ]
+      }
+    }
+  }
+}
