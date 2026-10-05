@@ -11,7 +11,7 @@
  * Organization: NLIT EDU (OPC) PVT. LTD.
  */
 
-const functions = require("firebase-functions");
+const functions = require("firebase-functions/v1");
 const admin = require("firebase-admin");
 const express = require("express");
 const cors = require("cors");
@@ -19,6 +19,9 @@ const { createClient } = require("@supabase/supabase-js");
 const nodemailer = require("nodemailer");
 const path = require("path");
 const fs = require("fs");
+
+// Add WebSocket polyfill for Supabase in Node 20
+globalThis.WebSocket = require("ws");
 
 // Try to load dotenv for local development
 try {
@@ -54,21 +57,39 @@ function getSupabaseAdmin() {
     console.warn("⚠️ SUPABASE_SERVICE_ROLE_KEY not set! Using anon key — writes may fail.");
   }
 
-  return createClient(url, serviceKey || anonKey);
+  return createClient(url, serviceKey || anonKey, {
+    auth: { persistSession: false },
+    global: { WebSocket: require("ws") }
+  });
 }
 
 // ─── Authentication ─────────────────────────────────────────────────────────
 
-function authenticate(adminId, adminPass) {
+async function authenticate(adminId, adminPass, firebaseToken) {
   const id1 = env("CERTIFICATE_ADMIN_ID");
   const pass1 = env("CERTIFICATE_ADMIN_PASS");
   const id2 = env("CERTIVA_ADMIN_ID");
   const pass2 = env("CERTIVA_ADMIN_PASS");
 
-  const valid1 = id1 && pass1 && adminId === id1 && adminPass === pass1;
-  const valid2 = id2 && pass2 && adminId === id2 && adminPass === pass2;
+  if (adminId && adminPass) {
+    const valid1 = id1 && pass1 && adminId === id1 && adminPass === pass1;
+    const valid2 = id2 && pass2 && adminId === id2 && adminPass === pass2;
+    if (valid1 || valid2) return true;
+  }
 
-  return valid1 || valid2;
+  if (firebaseToken) {
+    try {
+      const decodedToken = await admin.auth().verifyIdToken(firebaseToken);
+      const email = decodedToken.email;
+      if (email === id1 || email === id2 || email === "masterrahul.ind@gmail.com") {
+        return true;
+      }
+    } catch (error) {
+      console.error("Firebase Token Verification Failed:", error);
+    }
+  }
+
+  return false;
 }
 
 // ─── Cloudinary Upload ─────────────────────────────────────────────────────
@@ -299,7 +320,9 @@ async function sendCertificateEmail(studentName, studentEmail, courseTitle, cert
       <body>
         <div class="email-container">
           <div class="header-banner">
-            <div class="logo">Certiva</div>
+            <div style="background: #ffffff; display: inline-block; padding: 12px 24px; border-radius: 50px; margin-bottom: 20px;">
+              <img src="https://certiva.careercue.in/logo.png" alt="Certiva" style="height: 30px; width: auto; display: block;" />
+            </div>
             <h1 class="title">Congratulations!</h1>
             <div class="subtitle">Certificate of Completion Issued</div>
           </div>
@@ -330,7 +353,7 @@ async function sendCertificateEmail(studentName, studentEmail, courseTitle, cert
                 <span class="detail-value" style="color: #10b981;">✓ Authenticated</span>
               </div>
             </div>
-            <a href="${pdfUrl}" class="cta-btn" target="_blank">Download Certificate</a>
+            <a href="https://certiva.careercue.in/verify/${certificateNumber}" class="cta-btn" target="_blank">Verify & Download Certificate</a>
             <p class="verify-text">
               This credential is securely registered. Verify at:<br/>
               <a class="verify-link" href="https://certiva.careercue.in/verify/${certificateNumber}">https://certiva.careercue.in/verify/${certificateNumber}</a>
@@ -371,7 +394,7 @@ async function sendCertificateEmail(studentName, studentEmail, courseTitle, cert
 app.get("/api/generate_certificates", async (req, res) => {
   const { adminId, adminPass, action, course } = req.query;
 
-  if (!authenticate(adminId, adminPass)) {
+  if (!(await authenticate(adminId, adminPass, req.query.firebaseToken || req.body?.firebaseToken))) {
     return res.status(401).json({ error: "Unauthorized." });
   }
 
@@ -472,7 +495,7 @@ app.post("/api/generate_certificates", async (req, res) => {
   try {
     const { adminId, adminPass, startDate, endDate, courseFilter, mode, studentQuery, sendEmail, certificateType = "internship", customIssueDate } = req.body;
 
-    if (!authenticate(adminId, adminPass)) {
+    if (!(await authenticate(adminId, adminPass, req.query.firebaseToken || req.body?.firebaseToken))) {
       return res.status(401).json({ error: "Unauthorized." });
     }
 
