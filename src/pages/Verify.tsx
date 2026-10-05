@@ -261,7 +261,7 @@ const Verify: React.FC = () => {
                   </div>
 
                   {/* Footer status card details */}
-                  <div className="mt-8 pt-8 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left bg-slate-50 p-6 rounded-2xl">
+                  <div className="mt-8 pt-8 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center sm:text-left bg-slate-50 p-6 rounded-2xl">
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider m-0">
                         Verification ID
@@ -284,7 +284,7 @@ const Verify: React.FC = () => {
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider m-0">
                         Grade
                       </p>
-                      <p className="text-sm font-black text-slate-800 mt-0.5 m-0 text-amber-600">
+                      <p className="text-sm font-black text-slate-800 mt-0.5 m-0">
                         A
                       </p>
                     </div>
