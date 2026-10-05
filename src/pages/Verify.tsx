@@ -213,7 +213,7 @@ const Verify: React.FC = () => {
                       href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-[#0077b5] hover:bg-[#005582] rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 shadow-md shadow-[#0077b5]/30 border border-[#0077b5]/20 no-underline text-white"
+                      className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-white/20 hover:bg-white/30 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border-none text-white no-underline"
                     >
                       <FaLinkedin size={16} /> Share
                     </a>
