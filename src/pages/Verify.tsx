@@ -210,7 +210,7 @@ const Verify: React.FC = () => {
                       {copied ? "Copied!" : "Share Link"}
                     </button>
                     <a
-                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://certiva.careercue.in/verify/${certificate.certificate_number}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-white/20 hover:bg-white/30 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border-none text-white no-underline"
@@ -270,7 +270,7 @@ const Verify: React.FC = () => {
                   </div>
 
                   {/* Footer status card details */}
-                  <div className="mt-8 pt-8 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center sm:text-left bg-slate-50 p-6 rounded-2xl">
+                  <div className="mt-8 pt-8 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left bg-slate-50 p-6 rounded-2xl">
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider m-0">
                         Verification ID
@@ -286,15 +286,6 @@ const Verify: React.FC = () => {
                       </p>
                       <p className="text-sm font-black text-slate-800 mt-0.5 m-0">
                         {certificate.issue_date}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider m-0">
-                        Grade
-                      </p>
-                      <p className="text-sm font-black text-slate-800 mt-0.5 m-0">
-                        A
                       </p>
                     </div>
 
