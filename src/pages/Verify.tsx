@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, XCircle, Share2, Download, Award, ShieldCheck, Search, QrCode } from 'lucide-react';
 import { FaLinkedin } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,10 +20,14 @@ interface Certificate {
 
 const Verify: React.FC = () => {
   const { credentialId } = useParams<{ credentialId: string }>();
+  const [searchParams] = useSearchParams();
+  const queryId = searchParams.get('id');
+  const initialId = credentialId || queryId || '';
+
   const navigate = useNavigate();
   
-  const [searchVal, setSearchVal] = useState(credentialId || '');
-  const [loading, setLoading] = useState(!!credentialId);
+  const [searchVal, setSearchVal] = useState(initialId);
+  const [loading, setLoading] = useState(!!initialId);
   const [certificate, setCertificate] = useState<Certificate | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(!!credentialId);
@@ -73,11 +77,11 @@ const Verify: React.FC = () => {
   };
 
   useEffect(() => {
-    if (credentialId) {
-      setSearchVal(credentialId);
-      fetchCertificate(credentialId);
+    if (initialId) {
+      setSearchVal(initialId);
+      fetchCertificate(initialId);
     }
-  }, [credentialId]);
+  }, [initialId]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -212,9 +216,9 @@ const Verify: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setShowPremiumModal(true)}
-                      className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-white/20 hover:bg-white/30 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border-none text-white"
+                      className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-[#0a66c2] hover:bg-[#004182] rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border border-[#0a66c2] text-white shadow-sm"
                     >
-                      <FaLinkedin size={16} /> Share
+                      <FaLinkedin size={18} /> Share
                     </button>
                     <button
                       onClick={handlePrint}
