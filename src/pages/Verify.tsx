@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { CheckCircle, XCircle, Share2, Download, Award, ShieldCheck, Search, QrCode } from 'lucide-react';
+import { CheckCircle, XCircle, Share2, Download, Award, ShieldCheck, Search, QrCode, Linkedin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 
@@ -208,6 +208,14 @@ const Verify: React.FC = () => {
                       {copied ? <CheckCircle size={16} /> : <Share2 size={16} />}
                       {copied ? "Copied!" : "Share Link"}
                     </button>
+                    <a
+                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-[#0077b5] hover:bg-[#005582] rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 shadow-md shadow-[#0077b5]/30 border border-[#0077b5]/20 no-underline text-white"
+                    >
+                      <Linkedin size={16} /> Share
+                    </a>
                     <button
                       onClick={handlePrint}
                       className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-white/20 hover:bg-white/30 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border-none text-white"
