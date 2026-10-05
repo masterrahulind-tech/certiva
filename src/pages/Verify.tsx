@@ -282,6 +282,15 @@ const Verify: React.FC = () => {
 
                     <div>
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider m-0">
+                        Grade
+                      </p>
+                      <p className="text-sm font-black text-slate-800 mt-0.5 m-0 text-amber-600">
+                        A
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider m-0">
                         Status
                       </p>
                       <span className="inline-flex items-center gap-1 text-xs font-black text-emerald-600 mt-0.5 uppercase m-0">
