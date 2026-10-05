@@ -28,6 +28,7 @@ const Verify: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(!!credentialId);
   const [copied, setCopied] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   const fetchCertificate = async (idToFetch: string) => {
     if (!idToFetch.trim()) return;
@@ -209,14 +210,12 @@ const Verify: React.FC = () => {
                       {copied ? <CheckCircle size={16} /> : <Share2 size={16} />}
                       {copied ? "Copied!" : "Share Link"}
                     </button>
-                    <a
-                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://certiva.careercue.in/verify/${certificate.certificate_number}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-white/20 hover:bg-white/30 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border-none text-white no-underline"
+                    <button
+                      onClick={() => setShowPremiumModal(true)}
+                      className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-white/20 hover:bg-white/30 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border-none text-white"
                     >
                       <FaLinkedin size={16} /> Share
-                    </a>
+                    </button>
                     <button
                       onClick={handlePrint}
                       className="flex-1 md:flex-none justify-center px-4 py-2.5 md:py-2 bg-white/20 hover:bg-white/30 rounded-xl text-xs md:text-sm font-bold transition flex items-center gap-1.5 cursor-pointer border-none text-white"
@@ -347,6 +346,52 @@ const Verify: React.FC = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Premium Upgrade Modal */}
+      <AnimatePresence>
+        {showPremiumModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-[100] p-4">
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }} 
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowPremiumModal(false)}
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center border border-slate-200"
+            >
+              <div className="w-16 h-16 bg-gradient-to-tr from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-amber-500/30 text-white">
+                <Award size={32} />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-2">Premium Feature</h3>
+              <p className="text-slate-500 text-sm mb-8 leading-relaxed">
+                One-click LinkedIn sharing is available exclusively for Premium accounts. Upgrade your account to unlock this and other advanced networking features.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button 
+                  onClick={() => {
+                    setShowPremiumModal(false);
+                    // Add actual upgrade routing here later
+                  }}
+                  className="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white rounded-xl font-bold transition-all shadow-md shadow-amber-500/20"
+                >
+                  Upgrade Now
+                </button>
+                <button 
+                  onClick={() => setShowPremiumModal(false)}
+                  className="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition-all"
+                >
+                  Maybe Later
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
